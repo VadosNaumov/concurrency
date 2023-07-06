@@ -36,7 +36,7 @@ public class ReportServiceTests {
         long start = System.currentTimeMillis();
         latch.countDown();
         executor.shutdown();
-        executor.awaitTermination(10, TimeUnit.MINUTES);
+        executor.awaitTermination(5, TimeUnit.MINUTES);
         long end = System.currentTimeMillis();
 
         System.out.println("Execution time: " + (end - start));

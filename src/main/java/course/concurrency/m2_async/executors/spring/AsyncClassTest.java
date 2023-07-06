@@ -17,11 +17,10 @@ public class AsyncClassTest {
     @Qualifier("applicationTaskExecutor")
     private ThreadPoolTaskExecutor executor;
 
-    @Async(value = "applicationTaskExecutor")
+    @Async
     public void runAsyncTask() {
         System.out.println("runAsyncTask: " + Thread.currentThread().getName());
-        executor.execute(this::internalTask);
-        executor.shutdown();
+        internalTask();
     }
 
     public void internalTask() {

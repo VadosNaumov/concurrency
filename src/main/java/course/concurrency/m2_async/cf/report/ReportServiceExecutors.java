@@ -1,19 +1,18 @@
 package course.concurrency.m2_async.cf.report;
 
 import course.concurrency.m2_async.cf.LoadGenerator;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ReportServiceExecutors {
-    private ExecutorService executor = Executors.newCachedThreadPool();
-//    private ExecutorService executor = Executors.newFixedThreadPool(72);
 
-//    private ThreadPoolExecutor executor = new ThreadPoolExecutor(
-//            6, 12, 60,
-//            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+    private ExecutorService executor = Executors.newCachedThreadPool();
+
     private LoadGenerator loadGenerator = new LoadGenerator();
 
     public Others.Report getReport() {
@@ -26,11 +25,7 @@ public class ReportServiceExecutors {
             Collection<Others.Customer> customers = customersFuture.get();
             Collection<Others.Item> items = iFuture.get();
             return combineResults(items, customers);
-        } catch (ExecutionException | InterruptedException ex) {
-            System.out.println("-----------------------------------Hello World");
-        } catch (Exception ex) {
-            System.out.println("-----------------------------------cho takoe");
-        }
+        } catch (ExecutionException | InterruptedException ex) {}
 
         return new Others.Report();
     }
@@ -40,15 +35,12 @@ public class ReportServiceExecutors {
     }
 
     private Collection<Others.Customer> getActiveCustomers() {
-        System.out.println("getActiveCustomers 1");
         loadGenerator.work();
-        System.out.println("getActiveCustomers 2");
         loadGenerator.work();
         return List.of(new Others.Customer(), new Others.Customer());
     }
 
     private Collection<Others.Item> getItems() {
-        System.out.println("getItems 1");
         loadGenerator.work();
         return List.of(new Others.Item(), new Others.Item());
     }
