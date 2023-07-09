@@ -1,9 +1,15 @@
 package course.concurrency.exams.auction;
 
-public class Notifier {
+import java.util.concurrent.*;
 
+public class Notifier {
+    private ExecutorService executor;
+    private final int poolSize = Runtime.getRuntime().availableProcessors();
+    public Notifier() {
+        executor = Executors.newFixedThreadPool(poolSize); // Создаем пул потоков для выполнения задач
+    }
     public void sendOutdatedMessage(Bid bid) {
-        imitateSending();
+        CompletableFuture.runAsync(this::imitateSending, executor);
     }
 
     private void imitateSending() {
@@ -12,5 +18,7 @@ public class Notifier {
         } catch (InterruptedException e) {}
     }
 
-    public void shutdown() {}
+    public void shutdown() {
+        executor.shutdownNow();
+    }
 }
