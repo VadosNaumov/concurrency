@@ -15,32 +15,41 @@ public class OrderService {
 
     public synchronized long createOrder(List<Item> items) {
         long id = nextId();
-        Order order = new Order(items);
-        order.setId(id);
+        Order order = new Order(id, items, null, false, Order.Status.NEW);
         currentOrders.put(id, order);
         return id;
     }
 
     public synchronized void updatePaymentInfo(long orderId, PaymentInfo paymentInfo) {
-        currentOrders.get(orderId).setPaymentInfo(paymentInfo);
-        if (currentOrders.get(orderId).checkStatus()) {
-            deliver(currentOrders.get(orderId));
+        Order order = currentOrders.get(orderId);
+        if (order != null) {
+            Order updatedOrder = order.withPaymentInfo(paymentInfo);
+            currentOrders.put(orderId, updatedOrder);
+            if (updatedOrder.checkStatus()) {
+                deliver(updatedOrder);
+            }
         }
     }
 
     public synchronized void setPacked(long orderId) {
-        currentOrders.get(orderId).setPacked(true);
-        if (currentOrders.get(orderId).checkStatus()) {
-            deliver(currentOrders.get(orderId));
+        Order order = currentOrders.get(orderId);
+        if (order != null) {
+            Order updatedOrder = order.withPacked(true);
+            currentOrders.put(orderId, updatedOrder);
+            if (updatedOrder.checkStatus()) {
+                deliver(updatedOrder);
+            }
         }
     }
 
     private synchronized void deliver(Order order) {
         /* ... */
-        currentOrders.get(order.getId()).setStatus(Order.Status.DELIVERED);
+        Order updatedOrder = order.withStatus(Order.Status.DELIVERED);
+        currentOrders.put(order.getId(), updatedOrder);
     }
 
     public synchronized boolean isDelivered(long orderId) {
-        return currentOrders.get(orderId).getStatus().equals(Order.Status.DELIVERED);
+        Order order = currentOrders.get(orderId);
+        return order != null && order.getStatus() == Order.Status.DELIVERED;
     }
 }
