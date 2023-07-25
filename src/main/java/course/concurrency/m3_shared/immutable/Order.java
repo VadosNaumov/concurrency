@@ -33,10 +33,6 @@ public class Order {
         return id;
     }
 
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
-
     public List<Item> getItems() {
         return items;
     }
@@ -45,27 +41,13 @@ public class Order {
         return paymentInfo;
     }
 
-//    public void setPaymentInfo(PaymentInfo paymentInfo) {
-//        this.paymentInfo = paymentInfo;
-//        this.status = Status.IN_PROGRESS;
-//    }
-
     public boolean isPacked() {
         return isPacked;
     }
 
-//    public void setPacked(boolean packed) {
-//        isPacked = packed;
-//        this.status = Status.IN_PROGRESS;
-//    }
-
     public Status getStatus() {
         return status;
     }
-
-//    public void setStatus(Status status) {
-//        this.status = status;
-//    }
 
     public Order withPaymentInfo(PaymentInfo paymentInfo) {
         return new Order(id, items, paymentInfo, isPacked, Status.IN_PROGRESS);
